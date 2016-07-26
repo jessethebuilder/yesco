@@ -24,8 +24,11 @@ class Walker
         end
       end
 
-      hal.saved_zips << loc
-      hal.save
+      Mutux.new.syncronize do
+        hal.saved_zips << loc
+        hal.save
+      end
+      
       puts "All Records for #{loc} Saved"
     end
 
