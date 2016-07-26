@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/jessethebuilder/farm_scrape
-  revision: 1db0cdd3ab6da85b7e9af6ee183e92aa3c700284
+  revision: 7db9ac25def8a4ecb4d7c201c301845eff2d77b1
   specs:
     farm_scrape (0.1.0)
       capybara (~> 2.7.1)
