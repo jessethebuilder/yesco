@@ -1,0 +1,16 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: yesco_dev
+  pool: 5
+  host: localhost
+  port: 5432
+  username: postgres
+  password: carltonlasiter
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: yesco_production
+  pool: 5
+  password:
