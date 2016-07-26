@@ -1,10 +1,12 @@
-PATH
-  remote: C:/Users/Bucky/Desktop/jesseweb/farm_ruby
+GIT
+  remote: https://github.com/jessethebuilder/farm_ruby
+  revision: e08562d62bb50654f6a78a35d6363f3f33a2d13e
   specs:
     farm_ruby (0.1.0)
 
-PATH
-  remote: C:/Users/Bucky/Desktop/jesseweb/farm_scrape
+GIT
+  remote: https://github.com/jessethebuilder/farm_scrape
+  revision: 80191b620a26bd29d30e3e93309c30fc53fa6720
   specs:
     farm_scrape (0.1.0)
       capybara (~> 2.7.1)
@@ -65,9 +67,13 @@ GEM
     concurrent-ruby (1.0.2)
     debug_inspector (0.0.2)
     erubis (2.7.0)
+    execjs (2.7.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
+    jbuilder (2.6.0)
+      activesupport (>= 3.0.0, < 5.1)
+      multi_json (~> 1.2)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -78,6 +84,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    multi_json (1.12.1)
     nio4r (1.2.1)
     nokogiri (1.6.8-x64-mingw32)
       mini_portile2 (~> 2.1.0)
@@ -129,6 +136,8 @@ GEM
       thread_safe (~> 0.1)
     tzinfo-data (1.2016.6)
       tzinfo (>= 1.0.0)
+    uglifier (3.0.0)
+      execjs (>= 0.3.0, < 3)
     web-console (3.3.1)
       actionview (>= 5.0)
       activemodel (>= 5.0)
@@ -147,11 +156,16 @@ DEPENDENCIES
   byebug
   farm_ruby!
   farm_scrape!
+  jbuilder (~> 2.5)
   pg
   puma (~> 3.0)
   rails (~> 5.0.0)
   tzinfo-data
+  uglifier
   web-console
+
+RUBY VERSION
+   ruby 2.2.4p230
 
 BUNDLED WITH
    1.12.5
