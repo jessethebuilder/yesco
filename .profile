@@ -1,1 +1,1 @@
-export PATH=$PATH:$HOME/vendor/assets/phantomjs_linux/bin
+<!-- export PATH=$PATH:$HOME/vendor/assets/phantomjs_linux/bin -->
