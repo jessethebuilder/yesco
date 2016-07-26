@@ -39,13 +39,13 @@ class Walker
 
   def phantomjs_path
     if Rails.env.production?
-      Rails.root.join('vendor', 'assets', 'phantomjs_linux', 'bin', 'phantomjs')
+      Rails.root.join('vendor', 'phantomjs', 'bin', 'phantomjs')
     end
 
   end
 
   def set_machine
-    @machine = JsScrape.new(timeout: 180, :proxy => false, :debug => false)
+    @machine = JsScrape.new(timeout: 180, :proxy => false, phantomjs: phantomjs_path, :debug => false)
   end
 
   def hal
