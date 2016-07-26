@@ -1,5 +1,5 @@
 module ApplicationHelper
-  def hal
-    Hal.first || Hal.create
-  end
+  # def hal
+  #   Hal.first || Hal.create
+  # end
 end

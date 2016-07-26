@@ -5,7 +5,7 @@ class Walker
     set_machine
   end
 
-  def parse
+  def walk
     while loc = get_next_loc
       counter = 0
       while counter
@@ -13,6 +13,7 @@ class Walker
           parse_result = IndexPage.new(@machine, loc, counter).parse_and_save
         rescue Capybara::Poltergeist::StatusFailError => cap_err
           puts "WALKER ERROR: #{cap_err.message}"
+          set_machine
           parse_result = :no_count
         end
 
@@ -23,6 +24,7 @@ class Walker
         end
       end
       hal.saved_zips << loc
+      hal.save
       puts "All Records for #{loc} Saved"
     end
 
@@ -37,5 +39,9 @@ class Walker
 
   def set_machine
     @machine = JsScrape.new(timeout: 180, :proxy => false)
+  end
+
+  def hal
+    Hal.first
   end
 end

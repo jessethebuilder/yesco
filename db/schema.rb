@@ -10,10 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160726024219) do
+ActiveRecord::Schema.define(version: 20160726041412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "hals", force: :cascade do |t|
+    t.text "saved_zips"
+    t.text "unsaved_zips"
+  end
 
   create_table "listings", force: :cascade do |t|
     t.string   "name"
@@ -47,9 +52,9 @@ ActiveRecord::Schema.define(version: 20160726024219) do
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.string   "name"
+    t.string   "author"
     t.text     "content"
-    t.integer  "yelp_id"
+    t.integer  "listing_id"
     t.float    "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

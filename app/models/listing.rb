@@ -1,32 +1,24 @@
 class Listing < ApplicationRecord
   has_many :reviews
+  attr_accessor :machine, :url
 
-  def initialize(machine, url)
-    @machine = machine
-    set_page(url)
-  end
-
-  def parse_and_save
-    _parse
-    id = _save
+  def parse
+    set_page
+    parse_page
     @machine.doc.css('.review--with-sidebar')[1..5].each do |element|
-      self.reviews << Review.new(element)
+      self.reviews << Review.new.parse(element)
     end
 
-    id
+    self
   end
 
   private
 
-  def _save
-    save_attributes(@db, 'businesses', ATTRIBUTES)
+  def set_page
+    @machine.goto(@url)
   end
 
-  def set_page(url)
-    @machine.goto(url)
-  end
-
-  def _parse
+  def parse_page
     self.name = @machine.doc.css('.biz-page-title').text.strip
     _parse_contact_info
     _parse_business_info

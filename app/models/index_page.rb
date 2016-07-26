@@ -1,21 +1,19 @@
 class IndexPage
   def initialize(machine, loc, start = 0)
-    @loc = loc
-    @start = start
     @machine = machine
-
-    set_page
-    set_links
+    @log = loc
+    @start = start
   end
 
   def parse_and_save
-    @machine.wait_until{ @machine.page.has_css?('.search-result') || @machine.page.has_css?('.with-search-exception') }
-
+    set_page(@loc, @start)
+    wait_until_page_ready
+    set_links
     unless @machine.page.has_css?('.with-search-exception')
       @links.each do |l|
-        show = YelpShow.new(@machine, @db, l)
-        id = show.parse_and_save
-        puts "Saving #{show.name} as Record ##{id}"
+        listing = Listing.new(:machine => @machine, :url => l)
+        listing.parse.save!
+        puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
       end
       true
     else
@@ -30,20 +28,20 @@ class IndexPage
     @links = []
     if nodes.count > 0
       nodes.map do |node|
-        link = "#{ScorelyYelp::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0]
-        q = @db.prepare('SELECT * FROM businesses WHERE yelp_website=? LIMIT 1')
-        q.bind_param(1, link)
-        @links << link if q.execute.count == 0
+        link = "#{Walker::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0]
+        @links << link if Listing.where(:yelp_website => link).count == 0
       end
     end
   end
 
-  def set_page
+  def set_page(loc, start)
+    index_path = "#{Walker::BASE_URL}/search?find_loc=#{loc}&start=#{start}"
     puts "PARSING: #{index_path}"
-    @machine.goto(index_path)
+    @machine.goto index_path
   end
 
-  def index_path
-    "#{ScorelyYelp::BASE_URL}/search?find_loc=#{@loc}&start=#{@start}"
+  def wait_until_page_ready
+    @machine.wait_until{ @machine.page.has_css?('.search-result') ||
+                         @machine.page.has_css?('.with-search-exception') }
   end
 end
