@@ -9,7 +9,8 @@ class IndexPage
     set_page
     wait_until_page_ready
     set_links
-    unless @machine.page.has_css?('.with-search-exception')
+    unless @machine.page.has_css?('.with-search-exception') ||
+           @machine.page.has_css?('.broaden-search-suggestions')
       @links.each do |l|
         listing = Listing.new(:machine => @machine, :url => l)
         listing.parse.save!
@@ -36,13 +37,13 @@ class IndexPage
 
   def set_page
     index_path = "#{Walker::BASE_URL}/search?find_loc=#{@loc}&start=#{@start}"
-    puts index_path
     puts "PARSING: #{index_path}"
     @machine.goto index_path
   end
 
   def wait_until_page_ready
     @machine.wait_until{ @machine.page.has_css?('.search-result') ||
-                         @machine.page.has_css?('.with-search-exception') }
+                         @machine.page.has_css?('.with-search-exception') ||
+                         @machine.page.has_css?('.broaden-search-suggestions')}
   end
 end

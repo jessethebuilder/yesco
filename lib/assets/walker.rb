@@ -23,6 +23,7 @@ class Walker
           counter = false
         end
       end
+
       hal.saved_zips << loc
       hal.save
       puts "All Records for #{loc} Saved"
@@ -47,8 +48,8 @@ class Walker
   def set_machine
     @machine = JsScrape.new(timeout: 180, :proxy => false, :debug => false)
   end
- 
+
   def hal
-    Hal.first
+    @hal ||= Hal.first
   end
 end

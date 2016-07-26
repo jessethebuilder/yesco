@@ -4,9 +4,8 @@ GIT
   specs:
     farm_ruby (0.1.0)
 
-GIT
-  remote: https://github.com/jessethebuilder/farm_scrape
-  revision: bcf6be6406e27ea9404a538f496c5ba0f71fd364
+PATH
+  remote: C:/Users/Bucky/Desktop/jesseweb/farm_scrape
   specs:
     farm_scrape (0.1.0)
       capybara (~> 2.7.1)
@@ -68,7 +67,7 @@ GEM
     debug_inspector (0.0.2)
     erubis (2.7.0)
     execjs (2.7.0)
-    globalid (0.3.6)
+    globalid (0.3.7)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
     jbuilder (2.6.0)
