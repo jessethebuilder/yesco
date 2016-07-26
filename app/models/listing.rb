@@ -5,8 +5,10 @@ class Listing < ApplicationRecord
   def parse
     set_page
     parse_page
-    @machine.doc.css('.review--with-sidebar')[1..5].each do |element|
-      self.reviews << Review.new.parse(element)
+
+    reviews = @machine.doc.css('.review--with-sidebar')[1..5]
+    if reviews
+      reviews.each { |e| self.reviews << Review.new.parse(e) }
     end
 
     self
