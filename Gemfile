@@ -8,7 +8,8 @@ gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 
-# gem 'jbuilder', '~> 2.5'
+gem 'uglifier'
+gem 'jbuilder', '~> 2.5'
 
 gem 'farm_ruby', :git => 'https://github.com/jessethebuilder/farm_ruby'
 # gem 'farm_ruby', :path => 'C:\Users\Bucky\Desktop\jesseweb\farm_ruby'
