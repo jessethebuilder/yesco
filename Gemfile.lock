@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/jessethebuilder/farm_scrape
-  revision: 61b005ef2f01a394c328d1eeacea70557393718b
+  revision: bcf6be6406e27ea9404a538f496c5ba0f71fd364
   specs:
     farm_scrape (0.1.0)
       capybara (~> 2.7.1)
@@ -90,7 +90,6 @@ GEM
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
     pg (0.18.4-x64-mingw32)
-    phantomjs (2.1.1.0)
     pkg-config (1.1.7)
     poltergeist (1.10.0)
       capybara (~> 2.1)
@@ -159,7 +158,6 @@ DEPENDENCIES
   farm_scrape!
   jbuilder (~> 2.5)
   pg
-  phantomjs
   puma (~> 3.0)
   rails (~> 5.0.0)
   tzinfo-data

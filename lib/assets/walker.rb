@@ -37,8 +37,15 @@ class Walker
     (hal.unsaved_zips - hal.saved_zips).sample
   end
 
+  # def phantomjs_path
+  #   if Rails.env.production?
+  #     Rails.root()
+  #   end
+  #
+  # end
+
   def set_machine
-    @machine = JsScrape.new(timeout: 180, :proxy => false, :phantomjs => Phantomjs.path, :debug => false)
+    @machine = JsScrape.new(timeout: 180, :proxy => false, :debug => false)
   end
 
   def hal
