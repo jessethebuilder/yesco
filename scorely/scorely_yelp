@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+require_relative 'config'
+require_relative 'lib/yelp/db.rb'
+require_relative 'lib/yelp/scorely_yelp_multi.rb'
+include ScorelyYelpDbHelper
+set_db
+
+arg = ARGV[0]
+
+if arg.nil?
+  ScorelyYelpMulti.new(@db).parse(3)
+elsif arg == 'write'
+  puts 'implement writer'
+else
+  raise ArgumentError, "Argument not recognizd: #{arg}"
+end
