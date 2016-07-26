@@ -14,8 +14,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'farm_ruby', :git => 'https://github.com/jessethebuilder/farm_ruby'
 # gem 'farm_ruby', :path => 'C:\Users\Bucky\Desktop\jesseweb\farm_ruby'
 
-# gem 'farm_scrape', :git => 'https://github.com/jessethebuilder/farm_scrape'
-gem 'farm_scrape', :path => 'C:\Users\Bucky\Desktop\jesseweb\farm_scrape'
+gem 'farm_scrape', :git => 'https://github.com/jessethebuilder/farm_scrape'
+# gem 'farm_scrape', :path => 'C:\Users\Bucky\Desktop\jesseweb\farm_scrape'
 
 group :production do
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
