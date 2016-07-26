@@ -39,7 +39,7 @@ class Walker
 
   def phantomjs_path
     if Rails.env.production?
-      Rails.root.join('vendor', 'phantomjs', 'bin', 'phantomjs')
+      Phantomjs.path
     end
 
   end

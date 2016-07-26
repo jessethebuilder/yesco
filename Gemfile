@@ -17,8 +17,10 @@ gem 'farm_ruby', :git => 'https://github.com/jessethebuilder/farm_ruby'
 gem 'farm_scrape', :git => 'https://github.com/jessethebuilder/farm_scrape'
 # gem 'farm_scrape', :path => 'C:\Users\Bucky\Desktop\jesseweb\farm_scrape'
 
+group :production do
+  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+end
 # gem 'poltergeist'
-# gem 'phantomjs', :require => 'phantomjs/poltergeist'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
