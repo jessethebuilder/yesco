@@ -45,7 +45,7 @@ class Walker
   end
 
   def set_machine
-    @machine = JsScrape.new(timeout: 180, :proxy => false, phantomjs: phantomjs_path, :debug => false)
+    @machine = JsScrape.new(timeout: 180, :proxy => false, :debug => false)
   end
 
   def hal
