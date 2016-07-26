@@ -1,12 +1,12 @@
 class IndexPage
   def initialize(machine, loc, start = 0)
     @machine = machine
-    @log = loc
+    @loc = loc
     @start = start
   end
 
   def parse_and_save
-    set_page(@loc, @start)
+    set_page
     wait_until_page_ready
     set_links
     unless @machine.page.has_css?('.with-search-exception')
@@ -34,8 +34,9 @@ class IndexPage
     end
   end
 
-  def set_page(loc, start)
-    index_path = "#{Walker::BASE_URL}/search?find_loc=#{loc}&start=#{start}"
+  def set_page
+    index_path = "#{Walker::BASE_URL}/search?find_loc=#{@loc}&start=#{@start}"
+    puts index_path
     puts "PARSING: #{index_path}"
     @machine.goto index_path
   end
