@@ -39,6 +39,7 @@ class Walker
   private
 
   def get_next_loc
+    hal = Hal.first
     (hal.unsaved_zips - hal.saved_zips).sample
   end
 
