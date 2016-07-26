@@ -24,11 +24,12 @@ class Walker
         end
       end
 
-      Mutux.new.syncronize do
+      # Mutux.new.syncronize do
+        hal = Hal.first
         hal.saved_zips << loc
         hal.save
-      end
-      
+      # end
+
       puts "All Records for #{loc} Saved"
     end
 
@@ -50,9 +51,5 @@ class Walker
 
   def set_machine
     @machine = JsScrape.new(timeout: 180, :proxy => false, :debug => false)
-  end
-
-  def hal
-    @hal ||= Hal.first
   end
 end
