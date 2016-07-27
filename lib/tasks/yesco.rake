@@ -26,12 +26,16 @@ namespace :yesco do
 
       f = File.open(path, 'a')
       f.write('[')
-      Listing.all.map(&:id).each do |id|
+      first = Listing.first.id
+      last = Listing.last.id
+      (first..last).each do |id|
         begin
           l = Listing.find(id)
           f.write(JSON.pretty_generate(JSON.parse(l.jbuild)))
           wrote_count += 1
           puts "WROTE: #{l.name} - ##{l.id}"
+        rescue ActiveRecord::RecordNotFound => rnf
+
         rescue => e
           puts "FAILED TO WRITE: #{l.name} - ##{l.id} - ERROR: #{e.message}"
         end
