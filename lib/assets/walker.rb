@@ -29,12 +29,12 @@ class Walker
           rescue Capybara::Poltergeist::StatusFailError => cap_err
             puts "WALKER ERROR: #{cap_err.message}"
             set_machine
-            parse_result = :no_count
+            parse_result = -1
           end
 
           if parse_result && parse_result > 0
             break_counter = 0
-            counter += 10 unless parse_result == :no_count # Occurs on Capy Error
+            counter += 10 unless parse_result == -1 # Occurs on Capy Error
           elsif parse_result == 0
             break_counter += 1
             # adjust break_counter to seearch past more index pages with
