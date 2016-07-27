@@ -20,7 +20,7 @@ class Walker
             parse_result = :no_count
           end
 
-          if parse_result > 0
+          if parse_results && parse_result > 0
             counter += 10 unless parse_result == :no_count # Occurs on Capy Error
           else #if false or 0 results
             counter = false
