@@ -1,7 +1,7 @@
 class Walker
   BASE_URL =  "http://www.yelp.com"
 
-  INDUSTRIES = ['Restaurants', 'Hotels+%26+Travel', 'Bars', 'health care', 'fitness', 'retail', '']
+  INDUSTRIES = ['Restaurants', '', 'Hotels+%26+Travel', 'Bars', 'health care', 'fitness', 'retail']
 
   def initialize
     set_machine
