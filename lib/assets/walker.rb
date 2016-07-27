@@ -8,6 +8,7 @@ class Walker
   def walk
     while loc = get_next_loc
       counter = 0
+      empty_counter = 0
       while counter
         begin
           parse_result = IndexPage.new(@machine, loc, counter).parse_and_save
@@ -17,18 +18,20 @@ class Walker
           parse_result = :no_count
         end
 
-        if parse_result
-          counter += 10 unless parse_result == :no_count
+        if parse_result > 0
+          empty_counter = 0
+          counter += 10 unless parse_result == :no_count # Occurs on Capy Error
+        elsif parse_result == 0
+          empty_counter += 1
+          counter = false if empty_counter == 5
         else
           counter = false
         end
       end
 
-      # Mutux.new.syncronize do
-        hal = Hal.first
-        hal.saved_zips << loc
-        hal.save
-      # end
+      hal = Hal.first
+      hal.saved_zips << loc
+      hal.save
 
       puts "All Records for #{loc} Saved"
     end

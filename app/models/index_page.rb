@@ -16,7 +16,8 @@ class IndexPage
         listing.parse.save!
         puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
       end
-      true
+      # @links have been filtered to remove any that already exist in the databse
+      @links.count
     else
       false
     end
