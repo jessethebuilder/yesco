@@ -31,6 +31,7 @@ namespace :yesco do
       first = Listing.first.id
       last = Listing.last.id
       (first..last).each_slice(1000) do |ids|
+        slice_count = 0
         f = File.open(path, 'a')
 
         ids.each do |id|
@@ -41,6 +42,7 @@ namespace :yesco do
             json = pretty ? JSON.pretty_generate(JSON.parse(raw)) : raw
             f.write(json)
             wrote_count += 1
+            slice_count += 1
             puts "WROTE: #{l.name} - ##{l.id}"
           rescue ActiveRecord::RecordNotFound => rnf
 
@@ -50,6 +52,7 @@ namespace :yesco do
         end
 
         f.close
+        puts "SAVED AS JSON: #{slice_count} Records"
       end
       f = File.open(path, 'a')
       f.write(']')
