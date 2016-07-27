@@ -26,21 +26,32 @@ namespace :yesco do
 
       f = File.open(path, 'a')
       f.write('[')
+      f.close
+
       first = Listing.first.id
       last = Listing.last.id
-      (first..last).each do |id|
-        begin
-          l = Listing.find(id)
-          f.write(JSON.pretty_generate(JSON.parse(l.jbuild)))
-          wrote_count += 1
-          puts "WROTE: #{l.name} - ##{l.id}"
-        rescue ActiveRecord::RecordNotFound => rnf
+      (first..last).each_slice(1000) do |ids|
+        f = File.open(path, 'a')
 
-        rescue => e
-          puts "FAILED TO WRITE: #{l.name} - ##{l.id} - ERROR: #{e.message}"
+        ids.each do |id|
+          begin
+            l = Listing.find(id)
+            raw = l.jbuild
+            pretty = ENV['WRITE_PRETTY_JSON'] == 'true' ? true : false
+            json = pretty ? JSON.pretty_generate(JSON.parse(raw)) : raw
+            f.write(json)
+            wrote_count += 1
+            puts "WROTE: #{l.name} - ##{l.id}"
+          rescue ActiveRecord::RecordNotFound => rnf
+
+          rescue => e
+            puts "FAILED TO WRITE: #{l.name} - ##{l.id} - ERROR: #{e.message}"
+          end
         end
-      end
 
+        f.close
+      end
+      f = File.open(path, 'a')
       f.write(']')
       puts "WRITE COMPLETE: Wrote #{wrote_count} of #{total_count} Records"
     ensure
