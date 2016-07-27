@@ -1,9 +1,6 @@
 class Walker
   BASE_URL =  "http://www.yelp.com"
 
-  INDUSTRIES = ENV['WALKER_INDUSTRIES'].split(',')
-  #['Health+%26+Medical', 'Shopping', 'Hotels+%26+Travel', 'Fitness',  'Bars', 'Restaurants']
-
   def initialize
     set_machine
   end
@@ -11,14 +8,14 @@ class Walker
   def unsaved_industries
     i = Hal.first.current_industry
     if i
-      INDUSTRIES[INDUSTRIES.index(i)..-1]
+      industries[industries.index(i)..-1]
     else
-      INDUSTRIES
+      industries
     end
   end
 
   def walk
-    INDUSTRIES.each do |industry|
+    industries.each do |industry|
       Hal.first.update(:current_industry => industry)
 
       while loc = get_next_loc
@@ -64,6 +61,14 @@ class Walker
   end
 
   private
+
+  def industries
+    if ENV['WALKER_INDUSTRIES']
+      ENV['WALKER_INDUSTRIES'].split(',')
+    else
+      ['']
+    end
+  end
 
   def get_next_loc
     hal = Hal.first

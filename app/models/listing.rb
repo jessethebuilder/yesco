@@ -1,4 +1,5 @@
 class Listing < ApplicationRecord
+  include ListingsHelper
   has_many :reviews
   attr_accessor :machine, :url
 

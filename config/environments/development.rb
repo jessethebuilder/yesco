@@ -54,7 +54,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+
   ENV['WALKER_DEPTH'] = '2'
   ENV['WALKER_INDUSTRIES'] = "Shopping,Hotels+%26+Travel,Contractors,Auto,Fitness,Bars"
-  # Health+%26+Medical
+
 end

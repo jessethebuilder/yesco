@@ -27,9 +27,6 @@ class IndexPage
   def parse_and_save_listing(url)
     listing = Listing.new(:machine => @machine, :url => url)
     listing.parse.save
-    h = Hal.first
-    h.saved_urls << url
-    h.save
     puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
   end
 
@@ -41,15 +38,11 @@ class IndexPage
         link = "#{Walker::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0]
 
         if link.match(/https?:\/\/www\.yelp\.com\/adredir/).nil? &&
-          saved_urls.include?(link) == false
+           Listing.where(:yelp_website => link).count == 0
           @links << link
         end
       end
     end
-  end
-
-  def saved_urls
-    @saved_urls += Hal.first.saved_urls
   end
 
   def set_page
