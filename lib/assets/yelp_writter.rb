@@ -13,7 +13,7 @@ def write_all_yelp
 
     first = Listing.first.id
     last = Listing.last.id
-    (first..last).each_slice(1000) do |ids|
+    (first..last).each_slice(100) do |ids|
       slice_count = 0
       f = File.open(path, 'a')
 
