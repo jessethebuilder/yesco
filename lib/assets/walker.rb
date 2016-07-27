@@ -1,39 +1,39 @@
 class Walker
   BASE_URL =  "http://www.yelp.com"
 
+  INDUSTRIES = ['Restaurants', 'Hotels+%26+Travel', 'Bars', 'health care', 'fitness', 'retail', ''] 
+
   def initialize
     set_machine
   end
 
   def walk
-    while loc = get_next_loc
-      counter = 0
-      empty_counter = 0
-      while counter
-        begin
-          parse_result = IndexPage.new(@machine, loc, counter).parse_and_save
-        rescue Capybara::Poltergeist::StatusFailError => cap_err
-          puts "WALKER ERROR: #{cap_err.message}"
-          set_machine
-          parse_result = :no_count
+    INDUSTRIES.each do |industry|
+      while loc = get_next_loc
+        counter = 0
+        while counter
+          begin
+            parse_result = IndexPage.new(@machine, loc, industry, counter).parse_and_save
+          rescue Capybara::Poltergeist::StatusFailError => cap_err
+            puts "WALKER ERROR: #{cap_err.message}"
+            set_machine
+            parse_result = :no_count
+          end
+
+          if parse_result > 0
+            counter += 10 unless parse_result == :no_count # Occurs on Capy Error
+          else #if false or 0 results
+            counter = false
+          end
         end
 
-        if parse_result > 0
-          empty_counter = 0
-          counter += 10 unless parse_result == :no_count # Occurs on Capy Error
-        elsif parse_result == 0
-          empty_counter += 1
-          counter = false if empty_counter == 5
-        else
-          counter = false
-        end
+        hal = Hal.first
+        hal.saved_zips << loc
+        hal.save
+
+        puts "All #{industry} for #{loc} Saved"
       end
-
-      hal = Hal.first
-      hal.saved_zips << loc
-      hal.save
-
-      puts "All Records for #{loc} Saved"
+      puts "All Records for #{industry} Saved"
     end
 
     puts "Walker Complete!"
