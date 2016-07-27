@@ -22,6 +22,7 @@ class Walker
 
       while loc = get_next_loc
         counter = 0
+        break_counter = 0
         while counter
           begin
             parse_result = IndexPage.new(@machine, loc, industry, counter).parse_and_save
@@ -32,8 +33,12 @@ class Walker
           end
 
           if parse_result && parse_result > 0
+            break_counter = 0
             counter += 10 unless parse_result == :no_count # Occurs on Capy Error
-          else #if false or 0 results
+          elsif parse_result == 0
+            break_counter += 1
+            counter = false if break_counter == 3
+          else
             counter = false
           end
         end
