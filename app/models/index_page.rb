@@ -13,9 +13,7 @@ class IndexPage
     unless @machine.page.has_css?('.with-search-exception') ||
            @machine.page.has_css?('.broaden-search-suggestions')
       @links.each do |l|
-        listing = Listing.new(:machine => @machine, :url => l)
-        listing.parse.save!
-        puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
+        parse_and_save_listing(l)
       end
       # @links have been filtered to remove any that already exist in the databse
       @links.count
@@ -26,6 +24,15 @@ class IndexPage
 
   private
 
+  def parse_and_save_listing(url)
+    listing = Listing.new(:machine => @machine, :url => url)
+    listing.parse.save
+    h = Hal.first
+    h.saved_urls << url
+    h.save
+    puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
+  end
+
   def set_links
     nodes = @machine.doc.css('.search-result')
     @links = []
@@ -34,11 +41,15 @@ class IndexPage
         link = "#{Walker::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0]
 
         if link.match(/https?:\/\/www\.yelp\.com\/adredir/).nil? &&
-           Listing.where(:yelp_website => link).count == 0
+          saved_urls.include?(link) == false
           @links << link
         end
       end
     end
+  end
+
+  def saved_urls
+    @saved_urls += Hal.first.saved_urls
   end
 
   def set_page

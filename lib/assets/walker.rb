@@ -29,6 +29,7 @@ class Walker
             parse_result = IndexPage.new(@machine, loc, industry, counter).parse_and_save
           rescue Capybara::Poltergeist::StatusFailError => cap_err
             puts "WALKER ERROR: #{cap_err.message}"
+            @machine.driver.quit
             set_machine
             parse_result = -1
           end
@@ -38,7 +39,7 @@ class Walker
             counter += 10 unless parse_result == -1 # Occurs on Capy Error
           elsif parse_result == 0
             break_counter += 1
-            # adjust break_counter to seearch past more index pages with
+            # adjust break_counter to search past more index pages with
             # all saved records
             counter = false if break_counter == ENV['WALKER_DEPTH']
           else
