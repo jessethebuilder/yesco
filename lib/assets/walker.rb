@@ -1,7 +1,8 @@
 class Walker
   BASE_URL =  "http://www.yelp.com"
 
-  INDUSTRIES = ['Health+%26+Medical', 'Shopping', 'Hotels+%26+Travel', 'Fitness',  'Bars', 'Restaurants']
+  INDUSTRIES = ENV['WALKER_INDUSTRIES'].split(',')
+  #['Health+%26+Medical', 'Shopping', 'Hotels+%26+Travel', 'Fitness',  'Bars', 'Restaurants']
 
   def initialize
     set_machine
@@ -39,7 +40,7 @@ class Walker
             break_counter += 1
             # adjust break_counter to seearch past more index pages with
             # all saved records
-            counter = false if break_counter == 2
+            counter = false if break_counter == ENV['WALKER_DEPTH']
           else
             counter = false
           end
