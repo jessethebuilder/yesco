@@ -7,9 +7,10 @@ namespace :walker do
   end
 
   desc "Reset Yelp"
-  task :reset_yelp => :environment do
+  task :yelp_reset => :environment do
     h = Hal.first
     h.saved_zips = []
+    h.current_industry = nil
     h.save
   end
 end

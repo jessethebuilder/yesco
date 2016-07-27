@@ -10,14 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160726041412) do
+ActiveRecord::Schema.define(version: 20160727024307) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "hals", force: :cascade do |t|
-    t.text "saved_zips"
-    t.text "unsaved_zips"
+    t.text   "saved_zips"
+    t.text   "unsaved_zips"
+    t.string "current_industry"
   end
 
   create_table "listings", force: :cascade do |t|

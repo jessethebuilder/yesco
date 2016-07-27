@@ -7,8 +7,19 @@ class Walker
     set_machine
   end
 
+  def unsaved_industries
+    i = Hal.first.current_industry
+    if i
+      INDUSTRIES[INDUSTRIES.index(i)..-1]
+    else
+      INDUSTRIES
+    end
+  end
+
   def walk
     INDUSTRIES.each do |industry|
+      Hal.first.update(:current_industry => industry)
+
       while loc = get_next_loc
         counter = 0
         while counter
@@ -37,6 +48,7 @@ class Walker
       hal.saved_zips = []
       hal.save
       puts "All Records for #{industry} Saved"
+
     end
 
     puts "Walker Complete!"
