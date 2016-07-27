@@ -1,7 +1,7 @@
 class Walker
   BASE_URL =  "http://www.yelp.com"
 
-  INDUSTRIES = ['Restaurants', 'Hotels+%26+Travel', 'Bars', 'health care', 'fitness', 'retail', ''] 
+  INDUSTRIES = ['Restaurants', 'Hotels+%26+Travel', 'Bars', 'health care', 'fitness', 'retail', '']
 
   def initialize
     set_machine
@@ -33,6 +33,9 @@ class Walker
 
         puts "All #{industry} for #{loc} Saved"
       end
+      hal = Hal.first
+      hal.saved_zips = []
+      hal.save
       puts "All Records for #{industry} Saved"
     end
 

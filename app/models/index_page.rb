@@ -32,7 +32,11 @@ class IndexPage
     if nodes.count > 0
       nodes.map do |node|
         link = "#{Walker::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0]
-        @links << link if Listing.where(:yelp_website => link).count == 0
+
+        if link.match(/https?:\/\/www\.yelp\.com\/adredir/).nil? &&
+           Listing.where(:yelp_website => link).count == 0
+          @links << link
+        end
       end
     end
   end
