@@ -1,7 +1,7 @@
 class Walker
   BASE_URL =  "http://www.yelp.com"
 
-  INDUSTRIES = ['doctors+%26+dentists', 'Shopping', 'Hotels+%26+Travel', 'Fitness',  'Bars', 'Restaurants']
+  INDUSTRIES = ['Health+%26+Medical', 'Shopping', 'Hotels+%26+Travel', 'Fitness',  'Bars', 'Restaurants']
 
   def initialize
     set_machine
@@ -37,7 +37,9 @@ class Walker
             counter += 10 unless parse_result == :no_count # Occurs on Capy Error
           elsif parse_result == 0
             break_counter += 1
-            counter = false if break_counter == 1
+            # adjust break_counter to seearch past more index pages with
+            # all saved records
+            counter = false if break_counter == 2
           else
             counter = false
           end
