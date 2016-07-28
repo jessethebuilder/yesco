@@ -31,7 +31,7 @@
   json.yelp_website @listing.yelp_website
 
   json.reviews do
-    @listing.reviews.each do |r|
+    json.array! @listing.reviews do |r|
       json.author r.author
       json.rating r.rating
       json.content r.content

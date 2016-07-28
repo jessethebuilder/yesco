@@ -1,46 +1,71 @@
 def write_all_yelp
-  path = Rails.root.join('public', 'yelp.json')
-  total_count = Listing.count
-  wrote_count = 0
-  begin
-    f = File.open(path, 'w')
-    f.write('')
-    f.close
+  JSONWalkerWriter.new('http://yesco.herokuapp.com/listings', "yelp").save
+end
 
-    f = File.open(path, 'a')
-    f.write('[')
-    f.close
+class JSONWalkerWriter
+  def initialize(base_url, output = "walker")
+    @base_url = base_url
+    @output = "output/#{output}_#{Time.now.to_i}"
+  end
 
-    first = Listing.first.id
-    last = Listing.last.id
-    (first..last).each_slice(100) do |ids|
-      slice_count = 0
-      f = File.open(path, 'a')
+  def save
+    start_save
+    total_count = ids.count
+    puts "PREPARING: To write #{total_count} Records"
 
-      ids.each do |id|
-        begin
-          l = Listing.find(id)
-          raw = l.jbuild
-          pretty = ENV['WRITE_PRETTY_JSON'] == 'true' ? true : false
-          json = pretty ? JSON.pretty_generate(JSON.parse(raw)) : raw
-          f.write(json)
-          wrote_count += 1
-          slice_count += 1
-          # puts "WROTE: #{l.name} - ##{l.id}"
-        rescue ActiveRecord::RecordNotFound => rnf
+    counter = 0
+    progress_counter = 0
 
-        rescue => e
-          puts "FAILED TO WRITE: #{l.name} - ##{l.id} - ERROR: #{e.message}"
+    threads = []
+    ids.each_slice(10000) do |id_slice|
+      threads << Thread.new do
+        id_slice.each do |id|
+          counter += 1
+          record = RestClient.get("#{@base_url}/#{id}.json")
+
+          output = formatted_output(record)
+          output += ",\n" unless counter == total_count
+
+          F.append(file_path, output)
+
+          progress_counter += 1
+          if progress_counter == 100
+            puts "#{counter} of #{total_count} Records Saved to output folder"
+            progress_counter = 0
+          end
         end
       end
-
-      f.close
-      puts "SAVED AS JSON: #{slice_count} Records"
     end
-    f = File.open(path, 'a')
-    f.write(']')
-    puts "WRITE COMPLETE: Wrote #{wrote_count} of #{total_count} Records"
-  ensure
-    f.close
+
+    threads.each{ |t| t.join }
+    end_save
   end
+
+  private
+
+  def file_path
+    @file_path ||= "#{@output}.json"
+  end
+
+  def ids
+    @ids ||= JSON.parse(RestClient.get("#{@base_url}.json"))
+  end
+
+  def start_save
+    F.append(file_path, '[')
+  end
+
+  def end_save
+    F.append(file_path, ']')
+  end
+
+  def formatted_output(json)
+    json
+    print_pretty? ? JSON.pretty_generate(JSON.parse(json)) : json
+  end
+
+  def print_pretty?
+    ENV['WRITE_PRETTY_JSON'] == 'true' ? true : false
+  end
+
 end
