@@ -54,7 +54,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.4.0)
-    arel (7.1.0)
+    arel (7.1.1)
     builder (3.2.2)
     capybara (2.7.1)
       addressable
@@ -79,6 +79,9 @@ GEM
     jbuilder (2.6.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
+    kaminari (0.17.0)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -148,7 +151,7 @@ GEM
       thread_safe (~> 0.1)
     tzinfo-data (1.2016.6)
       tzinfo (>= 1.0.0)
-    uglifier (3.0.0)
+    uglifier (3.0.1)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
@@ -172,6 +175,7 @@ DEPENDENCIES
   farm_ruby!
   farm_scrape!
   jbuilder (~> 2.5)
+  kaminari
   pg
   phantomjs
   puma (~> 3.0)

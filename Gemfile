@@ -19,6 +19,8 @@ gem 'farm_scrape', :git => 'https://github.com/jessethebuilder/farm_scrape'
 
 gem 'rest-client'
 
+gem 'kaminari'
+
 group :production do
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
 end

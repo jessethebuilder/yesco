@@ -20,14 +20,14 @@ class JSONWalkerWriter
     ids.each_slice(10000) do |id_slice|
       threads << Thread.new do
         id_slice.each do |id|
-          counter += 1
           record = RestClient.get("#{@base_url}/#{id}.json")
 
           output = formatted_output(record)
-          output += ",\n" unless counter == total_count
+          output += ",\n" unless counter == total_count - 1
 
           F.append(file_path, output)
 
+          counter += 1
           progress_counter += 1
           if progress_counter == 100
             puts "#{counter} of #{total_count} Records Saved to output folder"
