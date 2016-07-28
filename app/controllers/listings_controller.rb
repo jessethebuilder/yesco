@@ -35,9 +35,10 @@ class ListingsController < ApplicationController
   end
 
   def all_listings
-    @listings = Listing.all
+    # @listings = Listing.all
     Enumerator.new do |enum|
-      Listing.find_each(:batch_size => 100) do |l|
+      # Listing.all.find_each(:batch_size => 100) do |l|
+      Listing.where(:zip => '10001').each do |l|
         enum << l.build
       end
       # @listings.find_in_batches(1){ |l| enum << l.jbuild }
