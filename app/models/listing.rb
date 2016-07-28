@@ -15,6 +15,12 @@ class Listing < ApplicationRecord
     self
   end
 
+  # def Listing.find_in_batches(batch_size, &block)
+  #   find_each(batch_size: batch_size) do |transaction|
+  #     yield transaction
+  #   end
+  # end
+
   private
 
   def set_page
