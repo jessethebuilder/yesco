@@ -3,7 +3,7 @@ def write_all_yelp
 end
 
 class JSONWalkerWriter
-  def initialize(thread_count = 5)
+  def initialize(thread_count = 4)
     @thread_count = thread_count
     @base_url = 'http://yesco.herokuapp.com/listings'
     @output = "output/yelp_#{Time.now.to_i}.json"
@@ -31,6 +31,7 @@ class JSONWalkerWriter
           end
 
           break if record_array.count == 0
+
 
           record_array.each do |record|
             output = formatted_output(record)
