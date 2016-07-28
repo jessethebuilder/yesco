@@ -3,7 +3,7 @@ class ListingsController < ApplicationController
 
   def index
     # @listings = render json: Listing.pluck(:id).to_json
-    per = ENV['YELP_WRITE_SPEED'] || 100
+    per = Listing.yelp_write_speed
     @listings = Listing.page(params[:page]).per(per)
   end
 

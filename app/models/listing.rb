@@ -15,6 +15,10 @@ class Listing < ApplicationRecord
     self
   end
 
+  def Listing.yelp_write_speed
+    ENV['YELP_WRITE_SPEED'] || 100
+  end
+
   # def Listing.find_in_batches(batch_size, &block)
   #   find_each(batch_size: batch_size) do |transaction|
   #     yield transaction

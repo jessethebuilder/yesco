@@ -1,41 +1,56 @@
 def write_all_yelp
-  JSONWalkerWriter.new('http://yesco.herokuapp.com/listings', "yelp").save
+  JSONWalkerWriter.new().save
 end
 
 class JSONWalkerWriter
-  def initialize(base_url, output = "walker")
-    @base_url = base_url
-    @output = "output/#{output}_#{Time.now.to_i}"
+  def initialize(thread_count = 5)
+    @thread_count = thread_count
+    @base_url = 'http://yesco.herokuapp.com/listings'
+    @output = "output/yelp_#{Time.now.to_i}.json"
   end
 
   def save
     start_save
-    total_count = ids.count
-    puts "PREPARING: To write #{total_count} Records"
+    # total_count = ids.count
 
     counter = 0
+    page_counter = 0
     progress_counter = 0
 
     threads = []
-    ids.each_slice(10000) do |id_slice|
+    @thread_count.times do
       threads << Thread.new do
-        id_slice.each do |id|
-          record = RestClient.get("#{@base_url}/#{id}.json")
-
-          output = formatted_output(record)
-          output += ",\n" unless counter == total_count - 1
-
-          F.append(file_path, output)
-
-          counter += 1
-          progress_counter += 1
-          if progress_counter == 100
-            puts "#{counter} of #{total_count} Records Saved to output folder"
-            progress_counter = 0
+        while true
+          page_counter += 1
+          begin
+            record_array = JSON.parse(RestClient.get("#{@base_url}.json?page=#{page_counter}"))
+          rescue RestClient::ServiceUnavailable => sue
+            page_counter -= 1
+            puts "ERROR: #{sue.message}"
+            next
           end
-        end
-      end
-    end
+
+          break if record_array.count == 0
+
+          record_array.each do |record|
+            output = formatted_output(record)
+            #
+            # unless counter == total_count && record_array.last == record
+            output += ",\n"
+            # end
+
+            F.append(@output, output)
+            progress_counter += 1
+            counter += 1
+
+            if progress_counter == 100
+              puts "#{counter} Records Saved to output folder"
+              progress_counter = 0
+            end
+          end # each record
+        end # while
+      end # each thread
+    end  # threads
 
     threads.each{ |t| t.join }
     end_save
@@ -43,25 +58,20 @@ class JSONWalkerWriter
 
   private
 
-  def file_path
-    @file_path ||= "#{@output}.json"
-  end
-
-  def ids
-    @ids ||= JSON.parse(RestClient.get("#{@base_url}.json"))
-  end
-
   def start_save
-    F.append(file_path, '[')
+    puts "PREPARING: To write Yelp Records"
+    F.append(@output, '[')
   end
 
   def end_save
-    F.append(file_path, ']')
+    puts "END SAVE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    whole = F.read(@output)
+
+    F.write(@output, "#{whole.chomp.chop}]")
   end
 
   def formatted_output(json)
-    json
-    print_pretty? ? JSON.pretty_generate(JSON.parse(json)) : json
+    print_pretty? ? JSON.pretty_generate(JSON.parse(json.to_json)) : json.to_json
   end
 
   def print_pretty?
