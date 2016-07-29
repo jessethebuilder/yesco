@@ -7,6 +7,7 @@ def write_all_yelp
 
   zip = (h.unsaved_zips - h.saved_zips).sample
   while zip
+    h = Hal.first
     h.saved_zips << zip
     h.save
     S3Writer.new('us-west-2', 'yesco-yelp', "#{zip}.json", ENV['AWS_ID'], ENV['AWS_SECRET']).write do
