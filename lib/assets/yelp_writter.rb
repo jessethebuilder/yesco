@@ -4,12 +4,16 @@ Aws.use_bundled_cert!
 
 def write_all_yelp
   h = Hal.first
-  (h.unsaved_zips - h.saved_zips)
-  h.unsaved_zips.each do |zip|
+
+  zip = (h.unsaved_zips - h.saved_zips).sample
+  while zip
+    h.saved_zips << zip
+    h.save
     S3Writer.new('us-west-2', 'yesco-yelp', zip.to_s, ENV['AWS_ID'], ENV['AWS_SECRET']).write do
-      # You need to define these ENV variables with your own AWS info
-       zip_to_json(zip)
+      zip_to_json(zip)
     end
+
+    zip = (h.unsaved_zips - h.saved_zips).sample
   end
 end
 
