@@ -9,7 +9,7 @@ def write_all_yelp
   while zip
     h.saved_zips << zip
     h.save
-    S3Writer.new('us-west-2', 'yesco-yelp', zip.to_s, ENV['AWS_ID'], ENV['AWS_SECRET']).write do
+    S3Writer.new('us-west-2', 'yesco-yelp', "#{zip}.json", ENV['AWS_ID'], ENV['AWS_SECRET']).write do
       zip_to_json(zip)
     end
 
