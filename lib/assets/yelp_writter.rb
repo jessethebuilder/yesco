@@ -1,74 +1,72 @@
 def write_all_yelp
-  JSONWalkerWriter.new().save
+  JSONWalkerWriter.new(25, nil).save
 end
 
 class JSONWalkerWriter
-  def initialize(thread_count = 4)
+  def initialize(thread_count, saved_records = nil)
     @thread_count = thread_count
     @base_url = 'http://yesco.herokuapp.com/listings'
     @output = "output/yelp_#{Time.now.to_i}.json"
+    @saved_records = saved_records
   end
 
   def save
-    start_save
-    # total_count = ids.count
-
     counter = 0
-    page_counter = 0
-    progress_counter = 0
-
+    progress_count = 0
+    total_count = ids.count
+    save_count = 0
+    error_count = 0
     threads = []
-    @thread_count.times do
-      threads << Thread.new do
-        while true
-          page_counter += 1
+
+    start_save
+    ids.each_slice(total_count / (@thread_count - 1)) do |slice|
+      slice.each do |id|
+        threads << Thread.new do
+          counter += 1
+
           begin
-            record_array = JSON.parse(RestClient.get("#{@base_url}.json?page=#{page_counter}"))
-          rescue RestClient::ServiceUnavailable => sue
-            page_counter -= 1
-            puts "ERROR: #{sue.message}"
-            next
-          end
-
-          break if record_array.count == 0
-
-
-          record_array.each do |record|
+            record = JSON.parse(RestClient.get("#{@base_url}/#{id}.json"))
+            progress_count += 1
+            save_counter += 1
             output = formatted_output(record)
-            #
-            # unless counter == total_count && record_array.last == record
-            output += ",\n"
-            # end
-
+            output += ",\n" unless counter == total_count
             F.append(@output, output)
-            progress_counter += 1
-            counter += 1
 
-            if progress_counter == 100
+            if progress_count == 100
               puts "#{counter} Records Saved to output folder"
-              progress_counter = 0
+              progress_count = 0
             end
-          end # each record
-        end # while
+          rescue RestClient::ServiceUnavailable => sue
+            error_count += 1
+            puts "ERROR: #{sue.message}"
+          end
+        end # each record
       end # each thread
     end  # threads
 
-    threads.each{ |t| t.join }
-    end_save
+    threads.each do |t|
+      t.join
+    end
+
+    F.append(@output, "]")
+    puts "RECORDS SAVED: Saved #{save_count} of #{total_count} with #{error_count}"
   end
 
   private
 
+  def ids
+    @ids ||= JSON.parse(RestClient.get("#{@base_url}?ids_only=1"))
+    clean_ids if @saved_records
+    @ids
+  end
+
+  def clean_ids
+
+  end
+
   def start_save
     puts "PREPARING: To write Yelp Records"
     F.append(@output, '[')
-  end
-
-  def end_save
-    puts "END SAVE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    whole = F.read(@output)
-
-    F.write(@output, "#{whole.chomp.chop}]")
   end
 
   def formatted_output(json)

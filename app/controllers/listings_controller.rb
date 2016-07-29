@@ -2,9 +2,12 @@ class ListingsController < ApplicationController
   # include ActionController::Live
 
   def index
-    # @listings = render json: Listing.pluck(:id).to_json
-    per = Listing.yelp_write_speed
-    @listings = Listing.page(params[:page]).per(per)
+    if params[:ids_only]
+      @listings = render json: Listing.pluck(:id).to_json
+    else
+      per = Listing.yelp_write_speed
+      @listings = Listing.page(params[:page]).per(per)
+    end
   end
 
   def show
@@ -13,12 +16,4 @@ class ListingsController < ApplicationController
 
   private
 
-  def formatted_output(json)
-    # pretty_print ? JSON.pretty_generate(JSON.parse(json)) : json
-    # json
-  end
-
-  def print_pretty
-    ENV['WRITE_PRETTY_JSON'] == 'true' ? true : false
-  end
 end
