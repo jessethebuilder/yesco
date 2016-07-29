@@ -58,7 +58,4 @@ Rails.application.configure do
   ENV['WALKER_DEPTH'] = '2'
   ENV['WALKER_INDUSTRIES'] = "Shopping,Hotels+%26+Travel,Contractors,Auto,Fitness,Bars"
   ENV['WRITE_PRETTY_JSON'] = 'true'
-
-  ENV['AWS_SECRET'] = "3Ub7dGRiqV4hARHP3HXzwEe/af0hQuX1ckZRLwRf"
-  ENV['AWS_ID'] = "AKIAJ765WCILRWQOCRTQ"
 end

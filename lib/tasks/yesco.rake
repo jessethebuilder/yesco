@@ -18,7 +18,7 @@ namespace :yesco do
   end
 
   desc "Yelp Write"
-  # run rake yesco:yelp_write
+  # heroku run bundle exec rake yesco:yelp_write
   task :yelp_write => :environment do
     write_all_yelp
   end
