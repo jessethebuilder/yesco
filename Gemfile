@@ -21,6 +21,8 @@ gem 'rest-client'
 
 gem 'kaminari'
 
+gem 'aws-sdk', '~> 2'
+
 group :production do
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
 end

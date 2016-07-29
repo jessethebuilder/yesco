@@ -22,4 +22,10 @@ namespace :yesco do
   task :yelp_write => :environment do
     write_all_yelp
   end
+
+  task :tst => :environment do
+    json = JSON.parse(F.read(Rails.root.join('test.json')))
+    # puts json.count
+    puts json.first['reviews'].first['author']
+  end
 end
