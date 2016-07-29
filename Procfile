@@ -1,2 +1,3 @@
 web: bundle exec rails server -p $PORT
-worker: bundle exec rake walker:yelp
+walker: bundle exec rake yesco:yelp
+writer: bundle exec rake yesco:yelp_writer
