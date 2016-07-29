@@ -11,21 +11,20 @@ namespace :yesco do
   desc "Yelp Reset"
   # heroku run bundle exec rake yesco:yelp_reset
   task :yelp_reset => :environment do
-    h = Hal.first
-    h.saved_zips = []
-    h.current_industry = nil
-    h.save
+    reset_hal
   end
 
   desc "Yelp Write"
   # heroku run bundle exec rake yesco:yelp_write
   task :yelp_write => :environment do
+    reset_hal
     write_all_yelp
   end
 
-  task :tst => :environment do
-    json = JSON.parse(F.read(Rails.root.join('test.json')))
-    # puts json.count
-    puts json.first['reviews'].first['author']
+  def reset_hal
+    h = Hal.first
+    h.saved_zips = []
+    h.current_industry = nil
+    h.save
   end
 end
