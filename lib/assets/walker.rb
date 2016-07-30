@@ -26,7 +26,7 @@ class Walker
             parse_result = IndexPage.new(@machine, loc, industry, counter).parse_and_save
           rescue Capybara::Poltergeist::StatusFailError => cap_err
             puts "WALKER ERROR: #{cap_err.message}"
-            @machine.driver.quit
+            @machine.page.driver.quit
             set_machine
             parse_result = -1
           end
@@ -74,13 +74,13 @@ class Walker
     hal = Hal.first
     (hal.unsaved_zips - hal.saved_zips).sample
   end
-
-  def phantomjs_path
-    if Rails.env.production?
-      Phantomjs.path
-    end
-
-  end
+  #
+  # def phantomjs_path
+  #   if Rails.env.production?
+  #     Phantomjs.path
+  #   end
+  #
+  # end
 
   def set_machine
     @machine = JsScrape.new(timeout: 180, :proxy => false, :debug => false)
