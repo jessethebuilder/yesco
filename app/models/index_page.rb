@@ -26,8 +26,14 @@ class IndexPage
 
   def parse_and_save_listing(url)
     listing = Listing.new(:machine => @machine, :url => url)
-    listing.parse.save
-    puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
+    l = listing.parse
+    # save_listing? must be declared somewhere in scope.
+    unless dont_save_listing?(l)
+      l.save
+      puts "SAVING: #{listing.name} - TOTAL_COUNT: #{Listing.count}"
+    else
+      puts "LISTING NOT SAVED"
+    end
   end
 
   def set_links
@@ -35,14 +41,13 @@ class IndexPage
     @links = []
     if nodes.count > 0
       nodes.map do |node|
-        link = "#{Walker::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0]
-
-        if link.match(/https?:\/\/www\.yelp\.com\/adredir/).nil? &&
-           Listing.where(:yelp_website => link).count == 0
+        link = "#{Walker::BASE_URL}#{node.css('a.biz-name')[0].get_attribute('href')}".split('?')[0].gsub('http://', 'https://')
+        if link.match(/https?:\/\/www\.yelp\.com\/adredir/).nil? && Listing.where(:yelp_website => link).count == 0 && !@links.include?(link)
           @links << link
         end
       end
     end
+    puts "COUNT: #{@links.count}"
   end
 
   def set_page
@@ -55,5 +60,10 @@ class IndexPage
     @machine.wait_until{ @machine.page.has_css?('.search-result') ||
                          @machine.page.has_css?('.with-search-exception') ||
                          @machine.page.has_css?('.broaden-search-suggestions')}
+  end
+
+  def dont_save_listing?(listing)
+    # Special to prevent saveing data you don't want.
+    # listing.state != 'NY'
   end
 end

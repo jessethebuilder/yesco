@@ -1,15 +1,21 @@
+require 'csv'
+
 class Listing < ApplicationRecord
   include ListingsHelper
-  has_many :reviews
+  has_many :reviews, dependent: :destroy
   attr_accessor :machine, :url
 
-  def parse
+  validates :yelp_website, uniqueness: true
+
+  def parse(get_reviews: false)
     set_page
     parse_page
 
-    reviews = @machine.doc.css('.review--with-sidebar')[1..5]
-    if reviews
-      reviews.each { |e| self.reviews << Review.new.parse(e) }
+    if(get_reviews)
+      reviews = @machine.doc.css('.review--with-sidebar')[1..-1]
+      if reviews
+        reviews.each { |e| self.reviews << Review.new.parse(e) }
+      end
     end
 
     self
@@ -18,12 +24,6 @@ class Listing < ApplicationRecord
   def Listing.yelp_write_speed
     ENV['YELP_WRITE_SPEED'] || 100
   end
-
-  # def Listing.find_in_batches(batch_size, &block)
-  #   find_each(batch_size: batch_size) do |transaction|
-  #     yield transaction
-  #   end
-  # end
 
   private
 
@@ -42,12 +42,12 @@ class Listing < ApplicationRecord
     self.from_the_business = @machine.doc.css('.js-from-biz-owner p').text.strip
     _parse_business_types
     _parse_hours
-    _parse_rating
-    _parse_more_info
+    # _parse_rating
+    # _parse_more_info
     self.yelp_website = @machine.page.current_url
-    _parse_health_inspection
+    # _parse_health_inspection
     _parse_business_owner
-    _parse_even_more_info
+    # _parse_even_more_info
   end
 
   def _parse_health_inspection
@@ -118,6 +118,8 @@ class Listing < ApplicationRecord
     _parse_address
     self.phone = @machine.doc.css('.biz-phone').text.strip
     self.website = @machine.doc.css('.biz-website a').text.strip
+
+    puts.self.website
   end
 
   def _parse_address

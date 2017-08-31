@@ -1,4 +1,8 @@
 module ListingsHelper
+  def self.included(klass)
+    klass.extend ListingsClassHelper
+  end
+
   def jbuild
     build_json.target!
   end
@@ -41,6 +45,21 @@ module ListingsHelper
           json.rating r.rating
           json.content r.content
         end
+      end
+    end
+  end
+end
+
+module ListingsClassHelper
+  def to_csv(listings = Listing.all)
+    CSV.open("#{Rails.root}/output/#{Time.now.to_i}.csv", "wb") do |csv|
+      csv << ['Name', 'Business Types', 'Phone', 'Website', 'From the Business', "Hours", "Specialties", "History",
+              "Business Owner", "Meet the Business Owner", "Address", "City", "State", "Zip"]
+      listings.all.each do |l|
+        row = [l.name, l.business_types, l.phone, l.website, l.from_the_business, l.hours, l.specialties, l.history,
+               l.business_owner, l.meet_the_business_owner, l.address, l.city, l.state, l.zip, l.yelp_website]
+        yield row if block_given?
+        csv << row
       end
     end
   end
